@@ -38,6 +38,8 @@ int main()
 			doublyLinkedList.PopBack();
 		if (GuiButton({ 160, 165, 125, 30 }, GuiIconText(ICON_CROSS, "Pop Front")))
 			doublyLinkedList.PopFront();
+		if (GuiButton({ 160, 200, 125, 30 }, GuiIconText(ICON_CROSS, "Sort")))
+			doublyLinkedList.Sort();
 		// Not sure how to implement the Insert method as a button since it requires a pointer to the node to insert behind of.
 
 		// First

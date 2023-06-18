@@ -140,6 +140,26 @@ void DoublyLinkedList::PopFront()
 
 void DoublyLinkedList::Sort()
 {
+	if (m_head == nullptr)
+		return;
+
+	// Bubble Sort
+	ListNode *current = m_head;
+	while (current != nullptr)
+	{
+		ListNode *next = current->GetNext();
+		while (next != nullptr)
+		{
+			if (current->GetData() > next->GetData())
+			{
+				int tmp = current->GetData();
+				current->SetData(next->GetData());
+				next->SetData(tmp);
+			}
+			next = next->GetNext();
+		}
+		current = current->GetNext();
+	}
 }
 
 unsigned int DoublyLinkedList::Count()
