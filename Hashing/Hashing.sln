@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hashing", "Hashing.vcxproj", "{FDAD7DCE-861C-42DF-B8D8-857AEC1AE573}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDAD7DCE-861C-42DF-B8D8-857AEC1AE573}.Debug|x64.ActiveCfg = Debug|x64
+		{FDAD7DCE-861C-42DF-B8D8-857AEC1AE573}.Debug|x64.Build.0 = Debug|x64
+		{FDAD7DCE-861C-42DF-B8D8-857AEC1AE573}.Debug|x86.ActiveCfg = Debug|Win32
+		{FDAD7DCE-861C-42DF-B8D8-857AEC1AE573}.Debug|x86.Build.0 = Debug|Win32
+		{FDAD7DCE-861C-42DF-B8D8-857AEC1AE573}.Release|x64.ActiveCfg = Release|x64
+		{FDAD7DCE-861C-42DF-B8D8-857AEC1AE573}.Release|x64.Build.0 = Release|x64
+		{FDAD7DCE-861C-42DF-B8D8-857AEC1AE573}.Release|x86.ActiveCfg = Release|Win32
+		{FDAD7DCE-861C-42DF-B8D8-857AEC1AE573}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {855F1D90-ED84-44E0-B34F-7D882EC2C2C9}
+	EndGlobalSection
+EndGlobal
