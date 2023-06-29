@@ -14,13 +14,6 @@ struct Entity
 
 };
 
-struct SharedEntity
-{
-	int entityCount;
-	Entity *entityArray;
-
-};
-
 class EntityDisplayApp
 {
 public:
@@ -33,6 +26,8 @@ public:
 	void Update(float deltaTime);
 	void Draw();
 
+	void Load();
+
 protected:
 	int m_screenWidth;
 	int m_screenHeight;
@@ -42,6 +37,5 @@ protected:
 	Entity *m_entities = nullptr;
 
 	HANDLE h;
-	SharedEntity *dataPointer;
 
 };

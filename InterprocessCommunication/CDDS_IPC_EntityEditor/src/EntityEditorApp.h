@@ -26,6 +26,8 @@ public:
 	void Update(float deltaTime);
 	void Draw();
 
+	void Save();
+
 protected:
 	int m_screenWidth;
 	int m_screenHeight;
@@ -35,6 +37,5 @@ protected:
 	Entity m_entities[ENTITY_COUNT];
 
 	HANDLE h;
-	Entity *dataPointer;
 
 };

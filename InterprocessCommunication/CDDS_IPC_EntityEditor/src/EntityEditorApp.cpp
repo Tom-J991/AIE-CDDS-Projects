@@ -30,11 +30,9 @@ bool EntityEditorApp::Startup()
 		entity.b = rand() % 255;
 	}
 
-	// Create shared memory block.
-	int memorySize = sizeof(Entity) * ENTITY_COUNT;
-	h = CreateFileMapping(INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE, 0, memorySize, L"EntityMemory");
-	if (h)
-		dataPointer = (Entity*)MapViewOfFile(h, FILE_MAP_ALL_ACCESS, 0, 0, memorySize);
+	// Create shared memory block
+	int memorySize = sizeof(int) + sizeof(Entity) * ENTITY_COUNT;
+	h = CreateFileMapping(INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE, 0, sizeof(Entity), L"SharedEntites");
 
 	return true;
 }
@@ -42,16 +40,14 @@ bool EntityEditorApp::Startup()
 void EntityEditorApp::Shutdown() 
 {
 	CloseWindow(); // Close window and OpenGL context
-	if (h)
-	{
-		if (dataPointer)
-			UnmapViewOfFile(dataPointer); // Unmap pointer.
-		CloseHandle(h); // Leave and delete shared memory block.
-	}
+	if (h) // Close shared memory block
+		CloseHandle(h);
 }
 
 void EntityEditorApp::Update(float deltaTime) 
 {
+	Save(); // Update shared memory
+
 	// select an entity to edit
 	static int selection = 0;
 	static bool selectionEditMode = false;
@@ -107,16 +103,6 @@ void EntityEditorApp::Update(float deltaTime)
 		if (m_entities[i].y < 0)
 			m_entities[i].y += m_screenHeight;
 	}
-
-	// Update shared memory data
-	if (h && dataPointer) // If shared memory exists
-	{
-		SharedEntity data{ };
-		data.entityCount = ENTITY_COUNT;
-		data.entity = m_entities;
-
-		*dataPointer = data; // Write to shared memory.
-	}
 }
 
 void EntityEditorApp::Draw() 
@@ -138,4 +124,26 @@ void EntityEditorApp::Draw()
 	DrawText("Press ESC to quit", 630, 15, 12, LIGHTGRAY);
 
 	EndDrawing();
+}
+
+void EntityEditorApp::Save()
+{
+	// Access shared memory
+	LPVOID fullData = (int *)MapViewOfFile(h, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+
+	// Save entity count
+	char *sizeLocation = (char *)fullData;
+	int *sizeMemory = (int *)sizeLocation;
+	*sizeMemory = ENTITY_COUNT;
+
+	// Save each entity from array
+	for (size_t i = 0; i < ENTITY_COUNT; ++i)
+	{
+		char *entityLocation = (char *)fullData + sizeof(int) + sizeof(Entity) * i;
+		Entity *entityMemory = (Entity *)entityLocation;
+		*entityMemory = m_entities[i];
+	}
+
+	// Close shared memory
+	UnmapViewOfFile(fullData);
 }

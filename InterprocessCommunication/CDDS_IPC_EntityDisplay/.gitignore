@@ -434,5 +434,3 @@ bin/**
 obj/**
 
 !lib/**
-
-InterprocessCommunication.zip

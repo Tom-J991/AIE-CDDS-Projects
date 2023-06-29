@@ -10,16 +10,8 @@ bool EntityDisplayApp::Startup()
 	InitWindow(m_screenWidth, m_screenHeight, "EntityDisplayApp");
 	SetTargetFPS(60);
 
-	// Access shared memory.
-	h = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, L"EntityMemory");
-	if (h)
-	{
-		dataPointer = (SharedEntity*)MapViewOfFile(h, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(SharedEntity));
-		if (dataPointer)
-			m_entityCount = dataPointer->entityCount;
-	}
-
-	m_entities = new Entity[m_entityCount];
+	// Access shared memory block
+	h = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, L"SharedEntites");
 
 	return true;
 }
@@ -27,23 +19,13 @@ bool EntityDisplayApp::Startup()
 void EntityDisplayApp::Shutdown() 
 {
 	CloseWindow(); // Close window and OpenGL context
-	if (h)
-	{
-		if (dataPointer)
-			UnmapViewOfFile(dataPointer); // Unmap pointer.
-		CloseHandle(h); // Leave shared memory.
-	}
+	if (h) // Closed shared memory block
+		CloseHandle(h);
 }
 
 void EntityDisplayApp::Update(float deltaTime) 
 {
-	if (h && dataPointer) // If shared memory exists.
-	{
-		for (int i = 0; i < m_entityCount; ++i)
-		{
-			m_entities[i] = dataPointer->entityArray[i];
-		}
-	}
+	Load(); // Update entities from shared memory
 }
 
 void EntityDisplayApp::Draw() 
@@ -69,4 +51,29 @@ void EntityDisplayApp::Draw()
 	DrawText("Press ESC to quit", 630, 15, 12, LIGHTGRAY);
 
 	EndDrawing();
+}
+
+void EntityDisplayApp::Load()
+{
+	// Access shared memory
+	LPVOID fullData = (int *)MapViewOfFile(h, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+
+	char *sizeLocation = (char *)fullData;
+	int *sizeMemory = (int *)sizeLocation;
+
+	// Set entity count
+	m_entityCount = *sizeMemory;
+	if (m_entities == nullptr) // Create entity array if it doesn't exist
+		m_entities = new Entity[m_entityCount];
+
+	// Set each entity
+	for (size_t i = 0; i < m_entityCount; ++i)
+	{
+		char *entityLocation = (char *)fullData + sizeof(int) + sizeof(Entity) * i;
+		Entity *entityMemory = (Entity *)entityLocation;
+		m_entities[i] = *entityMemory;
+	}
+
+	// Close shared memory
+	UnmapViewOfFile(fullData);
 }
